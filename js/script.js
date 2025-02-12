@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     exportModal.innerHTML = `
         <div class="modal-content">
             <h2>Export List</h2>
-            <textarea id="export-textarea" rows="10" readonly></textarea>
+            <textarea id="export-textarea" rows="10"></textarea>
             <button id="copy-button" class="copy-button">Copy</button>
         </div>
     `;
