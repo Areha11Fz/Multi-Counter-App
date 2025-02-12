@@ -77,11 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportListButton.addEventListener('click', () => {
         let exportText = '';
-        document.querySelectorAll('.counter-module').forEach((module, index) => {
+        let exportIndex = 1;
+        document.querySelectorAll('.counter-module').forEach((module) => {
             const title = module.querySelector('.title').textContent;
             const value = module.querySelector('.counter-value').textContent;
             if (parseInt(value) !== 0) {
-                exportText += `${index + 1}. ${title} (${value})\n`;
+                exportText += `${exportIndex}. ${title} (${value})\n`;
+                exportIndex++;
             }
         });
         exportTextarea.value = exportText;
