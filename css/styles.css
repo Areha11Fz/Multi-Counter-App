@@ -15,6 +15,8 @@ body {
   padding: 10px 20px;
   background-color: #1e1e1e;
   border-bottom: 1px solid #333;
+  width: inherit; /* Inherit width from the body */
+  margin: 0 auto; /* Center the navbar horizontally */
 }
 
 .navbar h1 {
@@ -322,4 +324,13 @@ button:hover {
 
 .add-title-button:hover {
   background-color: #e68900; /* Darker orange on hover */
+}
+
+#counters-container {
+  width: 100%; /* Set width to 100% of the container */
+  max-width: 100%; /* Ensure it doesn't exceed the container width */
+  display: grid; /* Ensure it uses grid layout */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Use minmax to ensure columns stretch evenly */
+  gap: 20px; /* Add gap between grid items */
+  margin-top: 20px; /* Add top margin */
 }
