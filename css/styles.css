@@ -163,6 +163,8 @@ button:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 100%; /* Ensure the title does not exceed the container width */
+  text-align: center; /* Center the title text */
   margin: 0 auto; /* Center the title horizontally */
 }
 
