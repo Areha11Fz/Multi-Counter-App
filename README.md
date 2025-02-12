@@ -30,7 +30,7 @@ To run this project locally, follow these steps:
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/multi-counter-app.git
+   git clone https://github.com/Areha11Fz/multi-counter-app.git
    ```
 
 2. Navigate to the project directory:
