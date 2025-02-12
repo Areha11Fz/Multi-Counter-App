@@ -66,6 +66,10 @@ button:hover {
   padding: 20px;
   border-radius: 8px;
   background-color: #1e1e1e;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensure content is spaced out */
+  text-align: center; /* Center the title horizontally */
 }
 
 .counter-module .title {
@@ -76,6 +80,7 @@ button:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0 auto; /* Center the title horizontally */
 }
 
 .counter-module .counter-value {
@@ -84,9 +89,16 @@ button:hover {
   color: #e0e0e0;
 }
 
+.counter-module .counter-unit {
+  font-size: 1em;
+  margin-bottom: 10px; /* Increased bottom margin */
+  color: #e0e0e0;
+}
+
 .counter-module .buttons {
   display: flex;
   justify-content: space-between;
+  margin-top: auto; /* Push buttons to the bottom */
 }
 
 .counter-module button {
