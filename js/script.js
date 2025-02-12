@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportListButton = document.getElementById('export-list');
     const importConfigButton = document.getElementById('import-config');
     const exportConfigButton = document.getElementById('export-config');
+    const addTitleButton = document.getElementById('add-title');
 
     // Create modal for setting counter value
     const modal = document.createElement('div');
@@ -80,6 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.body.appendChild(importConfigModal);
 
+    // Create modal for adding title for export list
+    const addTitleModal = document.createElement('div');
+    addTitleModal.className = 'modal';
+    addTitleModal.innerHTML = `
+        <div class="modal-content">
+            <h2>Add Title for Export List</h2>
+            <input type="text" id="title-input" placeholder="Enter title">
+            <button id="title-ok">OK</button>
+            <button id="title-cancel">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(addTitleModal);
+
     const modalInput = document.getElementById('modal-input');
     const modalOkButton = document.getElementById('modal-ok');
     const modalCancelButton = document.getElementById('modal-cancel');
@@ -94,12 +108,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyConfigButton = document.getElementById('copy-config-button');
     const importConfigTextarea = document.getElementById('import-config-textarea');
     const importConfigButtonModal = document.getElementById('import-config-button');
+    const titleInput = document.getElementById('title-input');
+    const titleOkButton = document.getElementById('title-ok');
+    const titleCancelButton = document.getElementById('title-cancel');
 
     let currentCounterValueElement = null;
     let currentCounterUnitElement = null;
 
-    // Load counters from localStorage
+    // Load counters and title from localStorage
     const savedCounters = JSON.parse(localStorage.getItem('counters')) || [];
+    const savedTitle = localStorage.getItem('exportTitle') || '';
     savedCounters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
 
     addCounterButton.addEventListener('click', () => {
@@ -123,16 +141,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     exportListButton.addEventListener('click', () => {
-        let exportText = '';
+        let exportText = savedTitle ? `${savedTitle}\n` : '';
         let exportIndex = 1;
-        document.querySelectorAll('.counter-module').forEach((module) => {
+        const modules = document.querySelectorAll('.counter-module');
+        const nonZeroModules = Array.from(modules).filter(module => parseInt(module.querySelector('.counter-value').textContent) !== 0);
+        nonZeroModules.forEach((module, index) => {
             const title = module.querySelector('.title').textContent;
             const value = module.querySelector('.counter-value').textContent;
             const unit = module.querySelector('.counter-unit').textContent;
-            if (parseInt(value) !== 0) {
-                exportText += `${exportIndex}. ${title} (${value}${unit ? ' ' + unit : ''})\n`;
-                exportIndex++;
+            exportText += `${exportIndex}. ${title} (${value}${unit ? ' ' + unit : ''})`;
+            if (index < nonZeroModules.length - 1) {
+                exportText += '\n';
             }
+            exportIndex++;
         });
         exportTextarea.value = exportText;
         exportModal.style.display = 'block';
@@ -145,7 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportConfigButton.addEventListener('click', () => {
         const counters = JSON.parse(localStorage.getItem('counters')) || [];
-        exportConfigTextarea.value = JSON.stringify(counters, null, 2);
+        const config = { counters, exportTitle: savedTitle };
+        exportConfigTextarea.value = JSON.stringify(config, null, 2);
         exportConfigModal.style.display = 'block';
     });
 
@@ -161,14 +183,31 @@ document.addEventListener('DOMContentLoaded', () => {
     importConfigButtonModal.addEventListener('click', () => {
         const configText = importConfigTextarea.value;
         try {
-            const counters = JSON.parse(configText);
+            const config = JSON.parse(configText);
+            const { counters, exportTitle } = config;
             localStorage.setItem('counters', JSON.stringify(counters));
+            localStorage.setItem('exportTitle', exportTitle || '');
             countersContainer.innerHTML = '';
             counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
             importConfigModal.style.display = 'none';
         } catch (e) {
             alert('Invalid JSON format');
         }
+    });
+
+    addTitleButton.addEventListener('click', () => {
+        addTitleModal.style.display = 'block';
+        titleInput.value = savedTitle;
+    });
+
+    titleOkButton.addEventListener('click', () => {
+        const newTitle = titleInput.value;
+        localStorage.setItem('exportTitle', newTitle);
+        addTitleModal.style.display = 'none';
+    });
+
+    titleCancelButton.addEventListener('click', () => {
+        addTitleModal.style.display = 'none';
     });
 
     window.addEventListener('click', (event) => {
@@ -186,6 +225,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (event.target === importConfigModal) {
             importConfigModal.style.display = 'none';
+        }
+        if (event.target === addTitleModal) {
+            addTitleModal.style.display = 'none';
         }
     });
 

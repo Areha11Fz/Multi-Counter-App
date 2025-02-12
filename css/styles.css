@@ -315,3 +315,11 @@ button:hover {
 .import-button:hover {
   background-color: #388e3c; /* Darker green on hover */
 }
+
+.add-title-button {
+  background-color: #ff9800; /* Orange background for add title button */
+}
+
+.add-title-button:hover {
+  background-color: #e68900; /* Darker orange on hover */
+}
