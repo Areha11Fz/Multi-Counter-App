@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load counters and title from localStorage
     const savedCounters = JSON.parse(localStorage.getItem('counters')) || [];
-    const savedTitle = localStorage.getItem('exportTitle') || '';
+    let savedTitle = localStorage.getItem('exportTitle') || '';
     savedCounters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
 
     addCounterButton.addEventListener('click', () => {
@@ -184,14 +184,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const configText = importConfigTextarea.value;
         try {
             const config = JSON.parse(configText);
-            const { counters, exportTitle } = config;
-            localStorage.setItem('counters', JSON.stringify(counters));
-            localStorage.setItem('exportTitle', exportTitle || '');
-            countersContainer.innerHTML = '';
-            counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
-            importConfigModal.style.display = 'none';
+            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string') {
+                const { counters, exportTitle } = config;
+                localStorage.setItem('counters', JSON.stringify(counters));
+                localStorage.setItem('exportTitle', exportTitle || '');
+                countersContainer.innerHTML = '';
+                counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
+                savedTitle = exportTitle || ''; // Update savedTitle
+                importConfigModal.style.display = 'none';
+            } else {
+                throw new Error('Invalid config structure');
+            }
         } catch (e) {
-            alert('Invalid JSON format');
+            alert('Invalid JSON format or structure');
         }
     });
 
