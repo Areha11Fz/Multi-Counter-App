@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCounterButton = document.getElementById('add-counter');
     const resetAllCountersButton = document.getElementById('reset-all-counters');
     const exportListButton = document.getElementById('export-list');
+    const importConfigButton = document.getElementById('import-config');
+    const exportConfigButton = document.getElementById('export-config');
 
     // Create modal for setting counter value
     const modal = document.createElement('div');
@@ -54,6 +56,30 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.body.appendChild(unitModal);
 
+    // Create modal for exporting config
+    const exportConfigModal = document.createElement('div');
+    exportConfigModal.className = 'modal';
+    exportConfigModal.innerHTML = `
+        <div class="modal-content">
+            <h2>Export Config</h2>
+            <textarea id="export-config-textarea" rows="10" readonly></textarea>
+            <button id="copy-config-button" class="copy-button">Copy</button>
+        </div>
+    `;
+    document.body.appendChild(exportConfigModal);
+
+    // Create modal for importing config
+    const importConfigModal = document.createElement('div');
+    importConfigModal.className = 'modal';
+    importConfigModal.innerHTML = `
+        <div class="modal-content">
+            <h2>Import Config</h2>
+            <textarea id="import-config-textarea" rows="10" placeholder="Paste JSON config here"></textarea>
+            <button id="import-config-button">Import</button>
+        </div>
+    `;
+    document.body.appendChild(importConfigModal);
+
     const modalInput = document.getElementById('modal-input');
     const modalOkButton = document.getElementById('modal-ok');
     const modalCancelButton = document.getElementById('modal-cancel');
@@ -64,6 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const unitInput = document.getElementById('unit-input');
     const unitOkButton = document.getElementById('unit-ok');
     const unitCancelButton = document.getElementById('unit-cancel');
+    const exportConfigTextarea = document.getElementById('export-config-textarea');
+    const copyConfigButton = document.getElementById('copy-config-button');
+    const importConfigTextarea = document.getElementById('import-config-textarea');
+    const importConfigButtonModal = document.getElementById('import-config-button');
 
     let currentCounterValueElement = null;
     let currentCounterUnitElement = null;
@@ -113,6 +143,34 @@ document.addEventListener('DOMContentLoaded', () => {
         document.execCommand('copy');
     });
 
+    exportConfigButton.addEventListener('click', () => {
+        const counters = JSON.parse(localStorage.getItem('counters')) || [];
+        exportConfigTextarea.value = JSON.stringify(counters, null, 2);
+        exportConfigModal.style.display = 'block';
+    });
+
+    copyConfigButton.addEventListener('click', () => {
+        exportConfigTextarea.select();
+        document.execCommand('copy');
+    });
+
+    importConfigButton.addEventListener('click', () => {
+        importConfigModal.style.display = 'block';
+    });
+
+    importConfigButtonModal.addEventListener('click', () => {
+        const configText = importConfigTextarea.value;
+        try {
+            const counters = JSON.parse(configText);
+            localStorage.setItem('counters', JSON.stringify(counters));
+            countersContainer.innerHTML = '';
+            counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
+            importConfigModal.style.display = 'none';
+        } catch (e) {
+            alert('Invalid JSON format');
+        }
+    });
+
     window.addEventListener('click', (event) => {
         if (event.target === resetModal) {
             resetModal.style.display = 'none';
@@ -122,6 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (event.target === unitModal) {
             unitModal.style.display = 'none';
+        }
+        if (event.target === exportConfigModal) {
+            exportConfigModal.style.display = 'none';
+        }
+        if (event.target === importConfigModal) {
+            importConfigModal.style.display = 'none';
         }
     });
 

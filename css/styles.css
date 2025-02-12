@@ -40,11 +40,11 @@ button:hover {
 }
 
 .export-button {
-  background-color: #4caf50; /* Green background for export button */
+  background-color: #1e88e5; /* Blue background for export button */
 }
 
 .export-button:hover {
-  background-color: #388e3c; /* Darker green on hover */
+  background-color: #1565c0; /* Darker blue on hover */
 }
 
 #counter {
@@ -219,5 +219,21 @@ button:hover {
 }
 
 .copy-button:hover {
+  background-color: #388e3c; /* Darker green on hover */
+}
+
+.top-right-buttons {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.import-button {
+  background-color: #4caf50; /* Green background for import button */
+}
+
+.import-button:hover {
   background-color: #388e3c; /* Darker green on hover */
 }
