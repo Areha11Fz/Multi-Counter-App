@@ -373,7 +373,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function adjustTitleWidth(titleElement) {
-        titleElement.style.width = `${titleElement.textContent.length + 1}ch`;
+        const parentWidth = titleElement.parentElement.clientWidth * 0.8; // 80% of parent width
+        let fontSize = parseFloat(window.getComputedStyle(titleElement).fontSize);
+
+        while (titleElement.scrollWidth > parentWidth && fontSize > 10) { // Minimum font size of 10px
+            fontSize -= 1;
+            titleElement.style.fontSize = `${fontSize}px`;
+        }
     }
 
     document.addEventListener('click', closeAllDropdowns);
