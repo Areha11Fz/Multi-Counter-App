@@ -80,7 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.counter-module').forEach((module, index) => {
             const title = module.querySelector('.title').textContent;
             const value = module.querySelector('.counter-value').textContent;
-            exportText += `${index + 1}. ${title} (${value})\n`;
+            if (parseInt(value) !== 0) {
+                exportText += `${index + 1}. ${title} (${value})\n`;
+            }
         });
         exportTextarea.value = exportText;
         exportModal.style.display = 'block';
