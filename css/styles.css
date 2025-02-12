@@ -57,6 +57,7 @@ body {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
   border-radius: 5px;
+  width: inherit; /* Inherit width */
 }
 
 .dropdown-content button {
@@ -70,10 +71,12 @@ body {
   width: 100%;
   cursor: pointer;
   box-sizing: border-box; /* Ensure padding is included in width */
+  margin: 0; /* Remove any margin */
 }
 
 .dropdown-content button:hover {
   background-color: #333;
+  box-sizing: border-box; /* Ensure padding is included in width */
 }
 
 .dropdown:hover .dropdown-content {
@@ -228,7 +231,7 @@ button:hover {
 
 .counter-module .menu-dropdown button {
   display: block;
-  width: 100%;
+  width: 100%; /* Ensure buttons fill the entire width */
   padding: 10px;
   background: none;
   border: none;
@@ -237,10 +240,14 @@ button:hover {
   cursor: pointer;
   font-size: 0.9em; /* Make text smaller */
   box-sizing: border-box; /* Ensure padding is included in width */
+  margin: 0; /* Remove any margin */
 }
 
 .counter-module .menu-dropdown button:hover {
   background-color: #444;
+  width: 100%; /* Ensure buttons fill the entire width */
+  box-sizing: border-box; /* Ensure padding is included in width */
+  margin: 0; /* Remove any margin */
 }
 
 /* Modal styles */
