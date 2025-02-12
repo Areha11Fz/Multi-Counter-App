@@ -8,6 +8,26 @@ body {
   margin: 20px auto; /* Center the site horizontally */
 }
 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #1e1e1e;
+  border-bottom: 1px solid #333;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 2em;
+  color: #e0e0e0;
+}
+
+.navbar-buttons {
+  display: flex;
+  gap: 10px;
+}
+
 h1 {
   margin-bottom: 40px; /* Increase the bottom margin to separate the title */
   font-size: 2.5em;
@@ -45,6 +65,14 @@ button:hover {
 
 .export-button:hover {
   background-color: #1565c0; /* Darker blue on hover */
+}
+
+#export-list {
+  background-color: #4caf50; /* Green background for export list button */
+}
+
+#export-list:hover {
+  background-color: #388e3c; /* Darker green on hover */
 }
 
 #counter {
