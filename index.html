@@ -13,8 +13,14 @@
     <nav class="navbar">
         <h1>Multi Counter App</h1>
         <div class="navbar-buttons">
-            <button id="import-config" class="import-button">Import Config</button>
-            <button id="export-config" class="export-button">Export Config</button>
+            <div class="dropdown">
+                <button class="dropbtn">Menu</button>
+                <div class="dropdown-content">
+                    <button id="import-config" class="import-button">Import Config</button>
+                    <button id="export-config" class="export-button">Export Config</button>
+                    <button id="add-title" class="add-title-button">Add Title for Export List</button>
+                </div>
+            </div>
         </div>
     </nav>
     <div id="counters-container" class="grid-container">
