@@ -119,7 +119,7 @@ button:hover {
 
 .counter-module .counter-unit {
   font-size: 1em;
-  margin-bottom: 10px; /* Increased bottom margin */
+  margin-bottom: 10px; /* Set bottom margin to 10px */
   color: #e0e0e0;
 }
 
