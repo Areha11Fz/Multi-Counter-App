@@ -208,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     titleOkButton.addEventListener('click', () => {
         const newTitle = titleInput.value;
         localStorage.setItem('exportTitle', newTitle);
+        savedTitle = newTitle; // Update savedTitle
         addTitleModal.style.display = 'none';
     });
 
