@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const importConfigButton = document.getElementById('import-config');
     const exportConfigButton = document.getElementById('export-config');
     const addTitleButton = document.getElementById('add-title');
+    const additionalSettingsButton = document.getElementById('additional-settings');
 
     // Create modal for setting counter value
     const modal = document.createElement('div');
@@ -94,6 +95,23 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.body.appendChild(addTitleModal);
 
+    // Create modal for additional settings
+    const settingsModal = document.createElement('div');
+    settingsModal.className = 'modal';
+    settingsModal.innerHTML = `
+        <div class="modal-content">
+            <h2>Additional Settings</h2>
+            <label class="switch">
+                <input type="checkbox" id="auto-add-s">
+                <span class="slider"></span>
+            </label>
+            <span>Auto Add 's' to Custom Unit</span>
+            <button id="settings-ok">OK</button>
+            <button id="settings-cancel">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(settingsModal);
+
     const modalInput = document.getElementById('modal-input');
     const modalOkButton = document.getElementById('modal-ok');
     const modalCancelButton = document.getElementById('modal-cancel');
@@ -111,9 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleInput = document.getElementById('title-input');
     const titleOkButton = document.getElementById('title-ok');
     const titleCancelButton = document.getElementById('title-cancel');
+    const autoAddSCheckbox = document.getElementById('auto-add-s');
+    const settingsOkButton = document.getElementById('settings-ok');
+    const settingsCancelButton = document.getElementById('settings-cancel');
 
     let currentCounterValueElement = null;
     let currentCounterUnitElement = null;
+
+    // Load settings from localStorage
+    const autoAddSSetting = localStorage.getItem('autoAddS') === 'true';
+    autoAddSCheckbox.checked = autoAddSSetting;
 
     // Load counters and title from localStorage
     const savedCounters = JSON.parse(localStorage.getItem('counters')) || [];
@@ -148,7 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
         nonZeroModules.forEach((module, index) => {
             const title = module.querySelector('.title').textContent;
             const value = module.querySelector('.counter-value').textContent;
-            const unit = module.querySelector('.counter-unit').textContent;
+            let unit = module.querySelector('.counter-unit').textContent;
+            if (autoAddSSetting && parseInt(value) > 1 && unit) {
+                unit += 's';
+            }
             exportText += `${exportIndex}. ${title} (${value}${unit ? ' ' + unit : ''})`;
             if (index < nonZeroModules.length - 1) {
                 exportText += '\n';
@@ -166,7 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportConfigButton.addEventListener('click', () => {
         const counters = JSON.parse(localStorage.getItem('counters')) || [];
-        const config = { counters, exportTitle: savedTitle };
+        const autoAddS = localStorage.getItem('autoAddS') === 'true';
+        const config = { counters, exportTitle: savedTitle, autoAddS };
         exportConfigTextarea.value = JSON.stringify(config, null, 2);
         exportConfigModal.style.display = 'block';
     });
@@ -184,13 +213,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const configText = importConfigTextarea.value;
         try {
             const config = JSON.parse(configText);
-            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string') {
-                const { counters, exportTitle } = config;
+            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string' && typeof config.autoAddS === 'boolean') {
+                const { counters, exportTitle, autoAddS } = config;
                 localStorage.setItem('counters', JSON.stringify(counters));
                 localStorage.setItem('exportTitle', exportTitle || '');
+                localStorage.setItem('autoAddS', autoAddS);
                 countersContainer.innerHTML = '';
                 counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
                 savedTitle = exportTitle || ''; // Update savedTitle
+                autoAddSCheckbox.checked = autoAddS; // Update autoAddS setting
                 importConfigModal.style.display = 'none';
             } else {
                 throw new Error('Invalid config structure');
@@ -216,6 +247,20 @@ document.addEventListener('DOMContentLoaded', () => {
         addTitleModal.style.display = 'none';
     });
 
+    additionalSettingsButton.addEventListener('click', () => {
+        settingsModal.style.display = 'block';
+    });
+
+    settingsOkButton.addEventListener('click', () => {
+        const autoAddS = autoAddSCheckbox.checked;
+        localStorage.setItem('autoAddS', autoAddS);
+        settingsModal.style.display = 'none';
+    });
+
+    settingsCancelButton.addEventListener('click', () => {
+        settingsModal.style.display = 'none';
+    });
+
     window.addEventListener('click', (event) => {
         if (event.target === resetModal) {
             resetModal.style.display = 'none';
@@ -234,6 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (event.target === addTitleModal) {
             addTitleModal.style.display = 'none';
+        }
+        if (event.target === settingsModal) {
+            settingsModal.style.display = 'none';
         }
     });
 
