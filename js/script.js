@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const importConfigButton = document.getElementById('import-config');
     const exportConfigButton = document.getElementById('export-config');
     const addTitleButton = document.getElementById('add-title');
+    const additionalSettingsButton = document.getElementById('additional-settings');
 
     // Create modal for setting counter value
     const modal = document.createElement('div');
@@ -94,6 +95,25 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.body.appendChild(addTitleModal);
 
+    // Create modal for additional settings
+    const settingsModal = document.createElement('div');
+    settingsModal.className = 'modal';
+    settingsModal.innerHTML = `
+        <div class="modal-content">
+            <h2>Additional Settings</h2>
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="auto-pluralize">
+                    <span class="slider"></span>
+                </label>
+                <span>Auto Pluralize Custom Unit</span>
+            </div>
+            <button id="settings-ok">OK</button>
+            <button id="settings-cancel">Cancel</button>
+        </div>
+    `;
+    document.body.appendChild(settingsModal);
+
     const modalInput = document.getElementById('modal-input');
     const modalOkButton = document.getElementById('modal-ok');
     const modalCancelButton = document.getElementById('modal-cancel');
@@ -111,9 +131,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleInput = document.getElementById('title-input');
     const titleOkButton = document.getElementById('title-ok');
     const titleCancelButton = document.getElementById('title-cancel');
+    const autoPluralizeCheckbox = document.getElementById('auto-pluralize');
+    const settingsOkButton = document.getElementById('settings-ok');
+    const settingsCancelButton = document.getElementById('settings-cancel');
 
     let currentCounterValueElement = null;
     let currentCounterUnitElement = null;
+
+    // Load settings from localStorage
+    let autoPluralizeSetting = localStorage.getItem('autoPluralize') === 'true';
+    autoPluralizeCheckbox.checked = autoPluralizeSetting;
 
     // Load counters and title from localStorage
     const savedCounters = JSON.parse(localStorage.getItem('counters')) || [];
@@ -141,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     exportListButton.addEventListener('click', () => {
+        autoPluralizeSetting = localStorage.getItem('autoPluralize') === 'true'; // Refresh setting
         let exportText = savedTitle ? `${savedTitle}\n` : '';
         let exportIndex = 1;
         const modules = document.querySelectorAll('.counter-module');
@@ -148,7 +176,10 @@ document.addEventListener('DOMContentLoaded', () => {
         nonZeroModules.forEach((module, index) => {
             const title = module.querySelector('.title').textContent;
             const value = module.querySelector('.counter-value').textContent;
-            const unit = module.querySelector('.counter-unit').textContent;
+            let unit = module.querySelector('.counter-unit').textContent;
+            if (autoPluralizeSetting && parseInt(value) > 1 && unit) {
+                unit += 's';
+            }
             exportText += `${exportIndex}. ${title} (${value}${unit ? ' ' + unit : ''})`;
             if (index < nonZeroModules.length - 1) {
                 exportText += '\n';
@@ -166,7 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportConfigButton.addEventListener('click', () => {
         const counters = JSON.parse(localStorage.getItem('counters')) || [];
-        const config = { counters, exportTitle: savedTitle };
+        const autoPluralize = localStorage.getItem('autoPluralize') === 'true';
+        const config = { counters, exportTitle: savedTitle, autoPluralize };
         exportConfigTextarea.value = JSON.stringify(config, null, 2);
         exportConfigModal.style.display = 'block';
     });
@@ -186,11 +218,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const config = JSON.parse(configText);
             if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string') {
                 const { counters, exportTitle } = config;
+                const autoPluralize = typeof config.autoPluralize === 'boolean' ? config.autoPluralize : false;
                 localStorage.setItem('counters', JSON.stringify(counters));
                 localStorage.setItem('exportTitle', exportTitle || '');
+                localStorage.setItem('autoPluralize', autoPluralize);
                 countersContainer.innerHTML = '';
                 counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
                 savedTitle = exportTitle || ''; // Update savedTitle
+                autoPluralizeCheckbox.checked = autoPluralize; // Update autoPluralize setting
                 importConfigModal.style.display = 'none';
             } else {
                 throw new Error('Invalid config structure');
@@ -216,6 +251,21 @@ document.addEventListener('DOMContentLoaded', () => {
         addTitleModal.style.display = 'none';
     });
 
+    additionalSettingsButton.addEventListener('click', () => {
+        settingsModal.style.display = 'block';
+    });
+
+    settingsOkButton.addEventListener('click', () => {
+        const autoPluralize = autoPluralizeCheckbox.checked;
+        localStorage.setItem('autoPluralize', autoPluralize);
+        autoPluralizeSetting = autoPluralize; // Update setting immediately
+        settingsModal.style.display = 'none';
+    });
+
+    settingsCancelButton.addEventListener('click', () => {
+        settingsModal.style.display = 'none';
+    });
+
     window.addEventListener('click', (event) => {
         if (event.target === resetModal) {
             resetModal.style.display = 'none';
@@ -234,6 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (event.target === addTitleModal) {
             addTitleModal.style.display = 'none';
+        }
+        if (event.target === settingsModal) {
+            settingsModal.style.display = 'none';
         }
     });
 
