@@ -216,8 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const configText = importConfigTextarea.value;
         try {
             const config = JSON.parse(configText);
-            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string' && typeof config.autoPluralize === 'boolean') {
-                const { counters, exportTitle, autoPluralize } = config;
+            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string') {
+                const { counters, exportTitle } = config;
+                const autoPluralize = typeof config.autoPluralize === 'boolean' ? config.autoPluralize : false;
                 localStorage.setItem('counters', JSON.stringify(counters));
                 localStorage.setItem('exportTitle', exportTitle || '');
                 localStorage.setItem('autoPluralize', autoPluralize);
