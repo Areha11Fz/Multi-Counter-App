@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCounterUnitElement = null;
 
     // Load settings from localStorage
-    const autoAddSSetting = localStorage.getItem('autoAddS') === 'true';
+    let autoAddSSetting = localStorage.getItem('autoAddS') === 'true';
     autoAddSCheckbox.checked = autoAddSSetting;
 
     // Load counters and title from localStorage
@@ -166,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     exportListButton.addEventListener('click', () => {
+        autoAddSSetting = localStorage.getItem('autoAddS') === 'true'; // Refresh setting
         let exportText = savedTitle ? `${savedTitle}\n` : '';
         let exportIndex = 1;
         const modules = document.querySelectorAll('.counter-module');
@@ -254,6 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsOkButton.addEventListener('click', () => {
         const autoAddS = autoAddSCheckbox.checked;
         localStorage.setItem('autoAddS', autoAddS);
+        autoAddSSetting = autoAddS; // Update setting immediately
         settingsModal.style.display = 'none';
     });
 
