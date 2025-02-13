@@ -101,11 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsModal.innerHTML = `
         <div class="modal-content">
             <h2>Additional Settings</h2>
-            <label class="switch">
-                <input type="checkbox" id="auto-add-s">
-                <span class="slider"></span>
-            </label>
-            <span>Auto Add 's' to Custom Unit</span>
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="auto-add-s">
+                    <span class="slider"></span>
+                </label>
+                <span>Auto Add 's' to Custom Unit</span>
+            </div>
             <button id="settings-ok">OK</button>
             <button id="settings-cancel">Cancel</button>
         </div>

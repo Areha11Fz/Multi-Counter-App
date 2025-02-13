@@ -274,6 +274,7 @@ button:hover {
   border-radius: 8px;
   color: #e0e0e0;
   overflow: hidden; /* Ensure no overflow */
+  text-align: center; /* Center content */
 }
 
 .modal-content input,
@@ -343,11 +344,19 @@ button:hover {
   margin-top: 20px; /* Add top margin */
 }
 
+.switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
 .switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
+  margin-right: 10px; /* Add space between switch and label */
 }
 
 .switch input {
