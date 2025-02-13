@@ -103,10 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2>Additional Settings</h2>
             <div class="switch-container">
                 <label class="switch">
-                    <input type="checkbox" id="auto-add-s">
+                    <input type="checkbox" id="auto-pluralize">
                     <span class="slider"></span>
                 </label>
-                <span>Auto Add 's' to Custom Unit</span>
+                <span>Auto Pluralize Custom Unit</span>
             </div>
             <button id="settings-ok">OK</button>
             <button id="settings-cancel">Cancel</button>
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleInput = document.getElementById('title-input');
     const titleOkButton = document.getElementById('title-ok');
     const titleCancelButton = document.getElementById('title-cancel');
-    const autoAddSCheckbox = document.getElementById('auto-add-s');
+    const autoPluralizeCheckbox = document.getElementById('auto-pluralize');
     const settingsOkButton = document.getElementById('settings-ok');
     const settingsCancelButton = document.getElementById('settings-cancel');
 
@@ -139,8 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCounterUnitElement = null;
 
     // Load settings from localStorage
-    let autoAddSSetting = localStorage.getItem('autoAddS') === 'true';
-    autoAddSCheckbox.checked = autoAddSSetting;
+    let autoPluralizeSetting = localStorage.getItem('autoPluralize') === 'true';
+    autoPluralizeCheckbox.checked = autoPluralizeSetting;
 
     // Load counters and title from localStorage
     const savedCounters = JSON.parse(localStorage.getItem('counters')) || [];
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     exportListButton.addEventListener('click', () => {
-        autoAddSSetting = localStorage.getItem('autoAddS') === 'true'; // Refresh setting
+        autoPluralizeSetting = localStorage.getItem('autoPluralize') === 'true'; // Refresh setting
         let exportText = savedTitle ? `${savedTitle}\n` : '';
         let exportIndex = 1;
         const modules = document.querySelectorAll('.counter-module');
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const title = module.querySelector('.title').textContent;
             const value = module.querySelector('.counter-value').textContent;
             let unit = module.querySelector('.counter-unit').textContent;
-            if (autoAddSSetting && parseInt(value) > 1 && unit) {
+            if (autoPluralizeSetting && parseInt(value) > 1 && unit) {
                 unit += 's';
             }
             exportText += `${exportIndex}. ${title} (${value}${unit ? ' ' + unit : ''})`;
@@ -197,8 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportConfigButton.addEventListener('click', () => {
         const counters = JSON.parse(localStorage.getItem('counters')) || [];
-        const autoAddS = localStorage.getItem('autoAddS') === 'true';
-        const config = { counters, exportTitle: savedTitle, autoAddS };
+        const autoPluralize = localStorage.getItem('autoPluralize') === 'true';
+        const config = { counters, exportTitle: savedTitle, autoPluralize };
         exportConfigTextarea.value = JSON.stringify(config, null, 2);
         exportConfigModal.style.display = 'block';
     });
@@ -216,15 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const configText = importConfigTextarea.value;
         try {
             const config = JSON.parse(configText);
-            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string' && typeof config.autoAddS === 'boolean') {
-                const { counters, exportTitle, autoAddS } = config;
+            if (config && Array.isArray(config.counters) && typeof config.exportTitle === 'string' && typeof config.autoPluralize === 'boolean') {
+                const { counters, exportTitle, autoPluralize } = config;
                 localStorage.setItem('counters', JSON.stringify(counters));
                 localStorage.setItem('exportTitle', exportTitle || '');
-                localStorage.setItem('autoAddS', autoAddS);
+                localStorage.setItem('autoPluralize', autoPluralize);
                 countersContainer.innerHTML = '';
                 counters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
                 savedTitle = exportTitle || ''; // Update savedTitle
-                autoAddSCheckbox.checked = autoAddS; // Update autoAddS setting
+                autoPluralizeCheckbox.checked = autoPluralize; // Update autoPluralize setting
                 importConfigModal.style.display = 'none';
             } else {
                 throw new Error('Invalid config structure');
@@ -255,9 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     settingsOkButton.addEventListener('click', () => {
-        const autoAddS = autoAddSCheckbox.checked;
-        localStorage.setItem('autoAddS', autoAddS);
-        autoAddSSetting = autoAddS; // Update setting immediately
+        const autoPluralize = autoPluralizeCheckbox.checked;
+        localStorage.setItem('autoPluralize', autoPluralize);
+        autoPluralizeSetting = autoPluralize; // Update setting immediately
         settingsModal.style.display = 'none';
     });
 
