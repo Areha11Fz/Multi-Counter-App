@@ -169,7 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     exportListButton.addEventListener('click', () => {
         autoPluralizeSetting = localStorage.getItem('autoPluralize') === 'true'; // Refresh setting
-        let exportText = savedTitle ? `${savedTitle}\n` : '';
+        // Get current date in "date month year" format
+        const date = new Date();
+        const month = date.toLocaleDateString('en-US', { month: 'long' });
+        const currentDate = `${date.getDate()} ${month.charAt(0).toUpperCase() + month.slice(1).toLowerCase()} ${date.getFullYear()}`;
+
+        // Replace {date} with current date in title if it exists
+        let titleWithDate = savedTitle.replace('{date}', currentDate);
+        let exportText = titleWithDate ? `${titleWithDate}\n` : '';
         let exportIndex = 1;
         const modules = document.querySelectorAll('.counter-module');
         const nonZeroModules = Array.from(modules).filter(module => parseInt(module.querySelector('.counter-value').textContent) !== 0);
