@@ -270,7 +270,7 @@ button:hover {
   padding: 20px;
   border: 1px solid #888;
   width: auto; /* Make width dynamic */
-  max-width: 400px;
+  max-width: 500px; /* Increased from 400px for wider inputs */
   border-radius: 8px;
   color: #e0e0e0;
   overflow: hidden; /* Ensure no overflow */
