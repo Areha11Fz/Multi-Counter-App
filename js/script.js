@@ -88,6 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
     addTitleModal.innerHTML = `
         <div class="modal-content">
             <h2>Add Title for Export List</h2>
+            <p class="tips">Tips: You can use {date} as placeholder in your title</p>
+            <p class="example">Example: "Today is {date}"</p>
+            <p class="result">Result: "Today is 24 March 2025"</p>
             <input type="text" id="title-input" placeholder="Enter title">
             <button id="title-ok">OK</button>
             <button id="title-cancel">Cancel</button>
