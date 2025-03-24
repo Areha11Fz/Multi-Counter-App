@@ -277,6 +277,23 @@ button:hover {
   text-align: center; /* Center content */
 }
 
+.modal-content .tips,
+.modal-content .example,
+.modal-content .result {
+  font-size: 0.9em;
+  color: #888;
+  margin: 5px 0;
+}
+
+.modal-content .example {
+  font-style: italic;
+}
+
+.modal-content .result {
+  color: #4caf50;
+  margin-bottom: 15px;
+}
+
 .modal-content input,
 .modal-content textarea {
   width: 100%;
