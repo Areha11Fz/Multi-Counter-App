@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentCounterValueElement = null;
     let currentCounterUnitElement = null;
+    // let draggedItem = null; // Removed for SortableJS
 
     // Load settings from localStorage
     let autoPluralizeSetting = localStorage.getItem('autoPluralize') === 'true';
@@ -150,9 +151,23 @@ document.addEventListener('DOMContentLoaded', () => {
     let savedTitle = localStorage.getItem('exportTitle') || '';
     savedCounters.forEach(counter => addCounter(counter.title, counter.value, counter.unit));
 
+    // Initialize SortableJS on the container
+    new Sortable(countersContainer, {
+        animation: 150, // ms, animation speed moving items when sorting, `0` — without animation
+        ghostClass: 'sortable-ghost', // Class name for the drop placeholder
+        chosenClass: 'sortable-chosen', // Class name for the chosen item
+        dragClass: 'sortable-drag', // Class name for the dragging item
+        onEnd: function (/**Event*/evt) {
+            // Save the new order when dragging ends
+            saveCounters();
+        },
+    });
+
     addCounterButton.addEventListener('click', () => {
         addCounter('New Counter', 0, '');
     });
+
+    // Removed native dragover/drop listeners for SortableJS
 
     resetAllCountersButton.addEventListener('click', () => {
         resetModal.style.display = 'block';
@@ -303,6 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addCounter(title, value, unit) {
         const counterModule = document.createElement('div');
         counterModule.className = 'counter-module';
+        // counterModule.draggable = true; // Removed for SortableJS
 
         const menuButton = document.createElement('button');
         menuButton.className = 'menu-button';
@@ -393,6 +409,8 @@ document.addEventListener('DOMContentLoaded', () => {
             unitInput.value = counterUnit.textContent;
             menuDropdown.classList.remove('show');
         });
+
+        // Removed dragstart/dragend listeners for SortableJS
     }
 
     modalOkButton.addEventListener('click', () => {
@@ -447,4 +465,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.addEventListener('click', closeAllDropdowns);
+
+    // Removed getDragAfterElement helper function for SortableJS
 });
